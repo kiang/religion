@@ -1,0 +1,63 @@
+{
+  "Info": [
+    {
+      "IsSuccess": "True",
+      "InAddress": "高雄市大寮區琉球里(路)108之8號",
+      "InSRS": "EPSG:4326",
+      "InFuzzyType": "[單雙號機制]+[最近門牌號機制]",
+      "InFuzzyBuffer": "0",
+      "InIsOnlyFullMatch": "False",
+      "InIsLockCounty": "True",
+      "InIsLockTown": "False",
+      "InIsLockVillage": "False",
+      "InIsLockRoadSection": "False",
+      "InIsLockLane": "False",
+      "InIsLockAlley": "False",
+      "InIsLockArea": "False",
+      "InIsSameNumber_SubNumber": "True",
+      "InCanIgnoreVillage": "True",
+      "InCanIgnoreNeighborhood": "True",
+      "InReturnMaxCount": "0",
+      "OutTotal": "2",
+      "OutMatchType": "模糊比對",
+      "OutMatchCode": "[高雄市]\tT:1,V:1,R:0,S:-1,L:-1,A:-1,SA:-1,T:-1,AR:0,NO:1,E:-1,N:-1",
+      "OutTraceInfo": "[高雄市]\t { 模糊比對 } (大寮區)\t找到符合的[鄉鎮市區]，(琉球里)\t找到符合的[村里]，((路)\t找不到符合的[路街名]，進行轉換搜尋[街變成路，路變成街]，進行轉換搜尋[地區名+路]，進行轉換搜尋[地區名+街]，轉換搜尋找不到符合的[路街名]，())\t找不到符合的[地區]，進行轉換搜尋[路或街變成地區名]，轉換搜尋找不到符合的[地區]，(108之8號)\t找到符合的[門牌號碼]，進行[雙號過濾]，模糊比對找到 2 筆符合的門牌地址。"
+    }
+  ],
+  "AddressList": [
+    {
+      "FULL_ADDR": "高雄市大寮區琉球里24鄰琉球路108號",
+      "COUNTY": "高雄市",
+      "TOWN": "大寮區",
+      "VILLAGE": "琉球里",
+      "NEIGHBORHOOD": "24鄰",
+      "ROAD": "琉球路",
+      "SECTION": "",
+      "LANE": "",
+      "ALLEY": "",
+      "SUB_ALLEY": "",
+      "TONG": "",
+      "AREA": "",
+      "NUMBER": "108號",
+      "X": 120.410388,
+      "Y": 22.612960
+    },
+    {
+      "FULL_ADDR": "高雄市大寮區琉球里8鄰巷尾路108號",
+      "COUNTY": "高雄市",
+      "TOWN": "大寮區",
+      "VILLAGE": "琉球里",
+      "NEIGHBORHOOD": "8鄰",
+      "ROAD": "巷尾路",
+      "SECTION": "",
+      "LANE": "",
+      "ALLEY": "",
+      "SUB_ALLEY": "",
+      "TONG": "",
+      "AREA": "",
+      "NUMBER": "108號",
+      "X": 120.410825,
+      "Y": 22.617417
+    }
+  ]
+}
