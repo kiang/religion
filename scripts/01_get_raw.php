@@ -65,7 +65,7 @@ function characterData($parser, $data)
 foreach ($reports as $report) {
     $p = pathinfo($report);
     $targetFile = $basePath . '/raw/' . $p['basename'];
-    //file_put_contents($targetFile, file_get_contents($report));
+    file_put_contents($targetFile, file_get_contents($report));
     $xml_parser = xml_parser_create();
     xml_set_element_handler($xml_parser, "startElement", "endElement");
     xml_set_character_data_handler($xml_parser, "characterData");
