@@ -91,6 +91,8 @@ if (!file_exists($dataPath)) {
     mkdir($dataPath, 0777, true);
 }
 $oFh = [];
+$missingFh = fopen($basePath . '/data/missing.csv', 'w');
+fputcsv($missingFh, ['type', 'name', 'city', 'address', 'x', 'y']);
 foreach ($pool as $item) {
     if (!isset($item['WGS84X']) && isset($item['地址'])) {
         $geocodingFile = $geocodingPath . '/' . $item['地址'] . '.json';
@@ -132,7 +134,8 @@ foreach ($pool as $item) {
             }
         }
     }
-    if (!empty($item['WGS84X'])) {
+
+    if (!empty($item['WGS84X']) && $item['WGS84X'] < 123 && $item['WGS84X'] > 119 && $item['WGS84Y'] > 21 && $item['WGS84Y'] < 26) {
         if (!isset($oFh[$item['行政區']])) {
             $oFh[$item['行政區']] = [
                 'type' => 'FeatureCollection',
@@ -150,6 +153,8 @@ foreach ($pool as $item) {
                 ],
             ],
         ];
+    } else if (isset($item['地址'])) {
+        fputcsv($missingFh, [$item['類型'], $item['名稱'], $item['行政區'], $item['地址'], isset($item['WGS84X']) ? $item['WGS84X'] : 0.0, isset($item['WGS84Y']) ? $item['WGS84Y'] : 0.0]);
     }
 }
 
