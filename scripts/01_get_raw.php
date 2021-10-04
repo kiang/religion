@@ -93,8 +93,9 @@ if (!file_exists($dataPath)) {
 $oFh = [];
 $missingFh = fopen($basePath . '/data/missing.csv', 'w');
 fputcsv($missingFh, ['type', 'name', 'city', 'address', 'x', 'y']);
+$addressReplace = [];
 foreach ($pool as $item) {
-    if (!isset($item['WGS84X']) && isset($item['地址'])) {
+    if (empty($item['WGS84X']) && isset($item['地址'])) {
         $geocodingFile = $geocodingPath . '/' . $item['地址'] . '.json';
         if (!file_exists($geocodingFile)) {
             $apiUrl = $config['tgos']['url'] . '?' . http_build_query([
@@ -126,7 +127,7 @@ foreach ($pool as $item) {
                 file_put_contents($geocodingFile, substr($content, $pos, $posEnd - $pos));
             }
         }
-        if (!file_exists($geocodingFile)) {
+        if (file_exists($geocodingFile)) {
             $json = json_decode(file_get_contents($geocodingFile), true);
             if (!empty($json['AddressList'][0]['X'])) {
                 $item['WGS84X'] = $json['AddressList'][0]['X'];
