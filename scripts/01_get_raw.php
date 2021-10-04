@@ -135,7 +135,7 @@ foreach ($pool as $item) {
         }
     }
 
-    if (!empty($item['WGS84X']) && $item['WGS84X'] < 123 && $item['WGS84X'] > 119 && $item['WGS84Y'] > 21 && $item['WGS84Y'] < 27) {
+    if (!empty($item['WGS84X']) && $item['WGS84X'] < 123 && $item['WGS84X'] > 118 && $item['WGS84Y'] > 21 && $item['WGS84Y'] < 27) {
         if (!isset($oFh[$item['行政區']])) {
             $oFh[$item['行政區']] = [
                 'type' => 'FeatureCollection',
