@@ -96,12 +96,17 @@ fputcsv($missingFh, ['type', 'name', 'city', 'address', 'x', 'y']);
 $addressReplace = [];
 foreach ($pool as $item) {
     if (empty($item['WGS84X']) && isset($item['地址'])) {
-        $geocodingFile = $geocodingPath . '/' . $item['地址'] . '.json';
+        $addressToFind = $item['地址'];
+        $pos = strpos($addressToFind, '號');
+        if(false !== $pos) {
+            $addressToFind = substr($addressToFind, 0, $pos) . '號';
+        }
+        $geocodingFile = $geocodingPath . '/' . $addressToFind . '.json';
         if (!file_exists($geocodingFile)) {
             $apiUrl = $config['tgos']['url'] . '?' . http_build_query([
                 'oAPPId' => $config['tgos']['APPID'], //應用程式識別碼(APPId)
                 'oAPIKey' => $config['tgos']['APIKey'], // 應用程式介接驗證碼(APIKey)
-                'oAddress' => $item['地址'], //所要查詢的門牌位置
+                'oAddress' => $addressToFind, //所要查詢的門牌位置
                 'oSRS' => 'EPSG:4326', //回傳的坐標系統
                 'oFuzzyType' => '2', //模糊比對的代碼
                 'oResultDataType' => 'JSON', //回傳的資料格式
