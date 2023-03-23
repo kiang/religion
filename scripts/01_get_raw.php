@@ -65,7 +65,11 @@ function characterData($parser, $data)
 foreach ($reports as $report) {
     $p = pathinfo($report);
     $targetFile = $basePath . '/raw/' . $p['basename'];
-    file_put_contents($targetFile, file_get_contents($report));
+    $c = file_get_contents($report);
+    if (empty($c)) {
+        continue;
+    }
+    file_put_contents($targetFile, $c);
     $xml_parser = xml_parser_create();
     xml_set_element_handler($xml_parser, "startElement", "endElement");
     xml_set_character_data_handler($xml_parser, "characterData");
@@ -98,7 +102,7 @@ foreach ($pool as $item) {
     if (empty($item['WGS84X']) && isset($item['地址'])) {
         $addressToFind = $item['地址'];
         $pos = strpos($addressToFind, '號');
-        if(false !== $pos) {
+        if (false !== $pos) {
             $addressToFind = substr($addressToFind, 0, $pos) . '號';
         }
         $geocodingFile = $geocodingPath . '/' . $addressToFind . '.json';
