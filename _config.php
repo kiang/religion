@@ -5,4 +5,8 @@ return [
         'APPID' => '',
         'APIKey' => '',
     ],
+    'db' => 'cunli',
+    'table' => 'cunli',
+    'user' => 'postgres',
+    'password' => '',
 ];
