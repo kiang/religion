@@ -127,13 +127,18 @@ foreach ($pool as $item) {
                 'oCanIgnoreVillage' => 'true', //找不時是否可忽略村里
                 'oCanIgnoreNeighborhood' => 'true', //找不時是否可忽略鄰
                 'oReturnMaxCount' => '0', //如為多筆時，限制回傳最大筆數
+                'oIsSupportPast' => 'false', //是否回傳過去式地址
+                'oIsShowCodeBase' => 'true', //是否回傳 CodeBase
             ]);
             $content = file_get_contents($apiUrl);
             $pos = strpos($content, '{');
             $posEnd = strrpos($content, '}') + 1;
             $resultline = substr($content, $pos, $posEnd - $pos);
+            $json = substr($content, $pos, $posEnd - $pos);
             if (strlen($resultline) > 10) {
-                file_put_contents($geocodingFile, substr($content, $pos, $posEnd - $pos));
+                file_put_contents($geocodingFile, $json);
+            } else {
+                echo $json . "\n";
             }
         }
         if (file_exists($geocodingFile)) {
