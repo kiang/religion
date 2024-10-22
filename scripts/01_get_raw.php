@@ -115,7 +115,7 @@ foreach ($pool as $item) {
         $idKey = $item['類型'] . $item['行政區'] . $item['名稱'];
     }
     if (!isset($idPool[$idKey])) {
-        $idPool[$idKey] = file_get_contents('/proc/sys/kernel/random/uuid');
+        $idPool[$idKey] = trim(file_get_contents('/proc/sys/kernel/random/uuid'));
     }
 
     if (!empty($item['WGS84X']) && $item['WGS84X'] < 123 && $item['WGS84X'] > 118 && $item['WGS84Y'] > 21 && $item['WGS84Y'] < 27) {
