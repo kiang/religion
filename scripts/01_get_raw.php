@@ -13,6 +13,7 @@ $currentKey = -1;
 $currentTag = '';
 $pool = [];
 $tags = [
+    '編號' => true,
     '寺廟名稱' => true,
     '基金會名稱' => true,
     '教會名稱' => true,
@@ -22,6 +23,7 @@ $tags = [
     '行政區' => true,
     '地址' => true,
     '教別' => true,
+    '登記別' => true,
     '建別' => true,
     '組織型態' => true,
     '電話' => true,
@@ -99,56 +101,6 @@ $missingFh = fopen($basePath . '/data/missing.csv', 'w');
 fputcsv($missingFh, ['type', 'name', 'city', 'address', 'x', 'y']);
 $addressReplace = [];
 foreach ($pool as $item) {
-    if (empty($item['WGS84X']) && isset($item['地址'])) {
-        $addressToFind = $item['地址'];
-        $pos = strpos($addressToFind, '號');
-        if (false !== $pos) {
-            $addressToFind = substr($addressToFind, 0, $pos) . '號';
-        }
-        $geocodingFile = $geocodingPath . '/' . $addressToFind . '.json';
-        if (!file_exists($geocodingFile)) {
-            $apiUrl = $config['tgos']['url'] . '?' . http_build_query([
-                'oAPPId' => $config['tgos']['APPID'], //應用程式識別碼(APPId)
-                'oAPIKey' => $config['tgos']['APIKey'], // 應用程式介接驗證碼(APIKey)
-                'oAddress' => $addressToFind, //所要查詢的門牌位置
-                'oSRS' => 'EPSG:4326', //回傳的坐標系統
-                'oFuzzyType' => '2', //模糊比對的代碼
-                'oResultDataType' => 'JSON', //回傳的資料格式
-                'oFuzzyBuffer' => '0', //模糊比對回傳門牌號的許可誤差範圍
-                'oIsOnlyFullMatch' => 'false', //是否只進行完全比對
-                'oIsLockCounty' => 'true', //是否鎖定縣市
-                'oIsLockTown' => 'false', //是否鎖定鄉鎮市區
-                'oIsLockVillage' => 'false', //是否鎖定村里
-                'oIsLockRoadSection' => 'false', //是否鎖定路段
-                'oIsLockLane' => 'false', //是否鎖定巷
-                'oIsLockAlley' => 'false', //是否鎖定弄
-                'oIsLockArea' => 'false', //是否鎖定地區
-                'oIsSameNumber_SubNumber' => 'true', //號之、之號是否視為相同
-                'oCanIgnoreVillage' => 'true', //找不時是否可忽略村里
-                'oCanIgnoreNeighborhood' => 'true', //找不時是否可忽略鄰
-                'oReturnMaxCount' => '0', //如為多筆時，限制回傳最大筆數
-                'oIsSupportPast' => 'false', //是否回傳過去式地址
-                'oIsShowCodeBase' => 'true', //是否回傳 CodeBase
-            ]);
-            $content = file_get_contents($apiUrl);
-            $pos = strpos($content, '{');
-            $posEnd = strrpos($content, '}') + 1;
-            $resultline = substr($content, $pos, $posEnd - $pos);
-            $json = substr($content, $pos, $posEnd - $pos);
-            if (strlen($resultline) > 10) {
-                file_put_contents($geocodingFile, $json);
-            } else {
-                echo $json . "\n";
-            }
-        }
-        if (file_exists($geocodingFile)) {
-            $json = json_decode(file_get_contents($geocodingFile), true);
-            if (!empty($json['AddressList'][0]['X'])) {
-                $item['WGS84X'] = $json['AddressList'][0]['X'];
-                $item['WGS84Y'] = $json['AddressList'][0]['Y'];
-            }
-        }
-    }
 
     if (!empty($item['WGS84X']) && $item['WGS84X'] < 123 && $item['WGS84X'] > 118 && $item['WGS84Y'] > 21 && $item['WGS84Y'] < 27) {
         if (!isset($oFh[$item['行政區']])) {
