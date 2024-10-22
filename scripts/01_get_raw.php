@@ -9,6 +9,7 @@ $reports = [
 ];
 
 $currentKey = -1;
+$currentType = '';
 $currentTag = '';
 $first = true;
 $pool = [];
@@ -42,32 +43,31 @@ function endElement($parser, $name) {}
 
 function characterData($parser, $data)
 {
-    global $currentKey, $currentTag, $pool, $tags, $first;
+    global $currentKey, $currentTag, $pool, $tags, $currentType;
+    if (false !== strpos($currentTag, 'OPENDATA')) {
+        ++$currentKey;
+    }
     $data = trim($data);
     if (!empty($data) && isset($tags[$currentTag])) {
         $inTypeTag = false;
         if (false !== strpos($currentTag, '名稱')) {
-            if (!$first) {
-                ++$currentKey;
-            } else {
-                $first = false;
-            }
             $inTypeTag = true;
         }
         if (!isset($pool[$currentKey])) {
-            $pool[$currentKey] = [];
+            $pool[$currentKey] = [
+                '類型' => $currentType,
+            ];
         }
         if (!$inTypeTag) {
             $pool[$currentKey][$currentTag] = $data;
         } else {
-            $pool[$currentKey]['類型'] = str_replace('名稱', '', $currentTag);
             $pool[$currentKey]['名稱'] = $data;
         }
     }
 }
 
-foreach ($reports as $report) {
-    $first = true;
+foreach ($reports as $type => $report) {
+    $currentType = $type;
     $p = pathinfo($report);
     $targetFile = $basePath . '/raw/' . $p['basename'];
     $c = file_get_contents($report);
