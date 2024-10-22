@@ -1,6 +1,5 @@
 <?php
 $basePath = dirname(__DIR__);
-$config = require $basePath . '/config.php';
 $reports = [
     '寺廟' => 'https://religion.moi.gov.tw/Report/temple.xml',
     '法人教會' => 'https://religion.moi.gov.tw/Report/church.xml',
@@ -87,10 +86,6 @@ foreach ($reports as $report) {
     }
     xml_parser_free($xml_parser);
     fclose($fp);
-}
-$geocodingPath = $basePath . '/raw/geocoding';
-if (!file_exists($geocodingPath)) {
-    mkdir($geocodingPath, 0777, true);
 }
 $dataPath = $basePath . '/data/poi';
 if (!file_exists($dataPath)) {
