@@ -49,10 +49,10 @@ function characterData($parser, $data)
         if (false !== strpos($currentTag, '名稱')) {
             if (!$first) {
                 ++$currentKey;
-                $inTypeTag = true;
             } else {
                 $first = false;
             }
+            $inTypeTag = true;
         }
         if (!isset($pool[$currentKey])) {
             $pool[$currentKey] = [];
