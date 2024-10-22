@@ -10,6 +10,7 @@ $reports = [
 
 $currentKey = -1;
 $currentTag = '';
+$first = true;
 $pool = [];
 $tags = [
     '編號' => true,
@@ -41,13 +42,17 @@ function endElement($parser, $name) {}
 
 function characterData($parser, $data)
 {
-    global $currentKey, $currentTag, $pool, $tags;
+    global $currentKey, $currentTag, $pool, $tags, $first;
     $data = trim($data);
     if (!empty($data) && isset($tags[$currentTag])) {
         $inTypeTag = false;
         if (false !== strpos($currentTag, '名稱')) {
-            ++$currentKey;
-            $inTypeTag = true;
+            if (!$first) {
+                ++$currentKey;
+                $inTypeTag = true;
+            } else {
+                $first = false;
+            }
         }
         if (!isset($pool[$currentKey])) {
             $pool[$currentKey] = [];
@@ -62,6 +67,7 @@ function characterData($parser, $data)
 }
 
 foreach ($reports as $report) {
+    $first = true;
     $p = pathinfo($report);
     $targetFile = $basePath . '/raw/' . $p['basename'];
     $c = file_get_contents($report);
@@ -91,7 +97,7 @@ if (!file_exists($dataPath)) {
 }
 $oFh = [];
 $idPool = [];
-$idFile = $basePath . '/data/id.csv';
+$idFile = $basePath . '/data/uuid.csv';
 if (file_exists($idFile)) {
     $fh = fopen($idFile, 'r');
     while ($line = fgetcsv($fh, 2048)) {
@@ -103,7 +109,7 @@ $missingFh = fopen($basePath . '/data/missing.csv', 'w');
 fputcsv($missingFh, ['type', 'name', 'city', 'address', 'x', 'y']);
 $addressReplace = [];
 foreach ($pool as $item) {
-    if ($item['類型'] === '寺廟') {
+    if ($item['類型'] === '寺廟' && isset($item['編號'])) {
         $idKey = '寺廟' . $item['編號'];
     } else {
         $idKey = $item['類型'] . $item['行政區'] . $item['名稱'];
