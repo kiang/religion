@@ -37,9 +37,7 @@ function startElement($parser, $name, $attrs)
     $currentTag = $name;
 }
 
-function endElement($parser, $name)
-{
-}
+function endElement($parser, $name) {}
 
 function characterData($parser, $data)
 {
@@ -92,12 +90,30 @@ if (!file_exists($dataPath)) {
     mkdir($dataPath, 0777, true);
 }
 $oFh = [];
+$idPool = [];
+$idFile = $basePath . '/data/id.csv';
+if (file_exists($idFile)) {
+    $fh = fopen($idFile, 'r');
+    while ($line = fgetcsv($fh, 2048)) {
+        $idPool[$line[0]] = $line[1];
+    }
+    fclose($fh);
+}
 $missingFh = fopen($basePath . '/data/missing.csv', 'w');
 fputcsv($missingFh, ['type', 'name', 'city', 'address', 'x', 'y']);
 $addressReplace = [];
 foreach ($pool as $item) {
+    if ($item['類型'] === '寺廟') {
+        $idKey = '寺廟' . $item['編號'];
+    } else {
+        $idKey = $item['類型'] . $item['行政區'] . $item['名稱'];
+    }
+    if (!isset($idPool[$idKey])) {
+        $idPool[$idKey] = file_get_contents('/proc/sys/kernel/random/uuid');
+    }
 
     if (!empty($item['WGS84X']) && $item['WGS84X'] < 123 && $item['WGS84X'] > 118 && $item['WGS84Y'] > 21 && $item['WGS84Y'] < 27) {
+        $item['uuid'] = $idPool[$idKey];
         if (!isset($oFh[$item['行政區']])) {
             $oFh[$item['行政區']] = [
                 'type' => 'FeatureCollection',
@@ -123,3 +139,9 @@ foreach ($pool as $item) {
 foreach ($oFh as $city => $fc) {
     file_put_contents($dataPath . '/' . $city . '.json', json_encode($fc, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 }
+
+$fh = fopen($idFile, 'w');
+foreach ($idPool as $k => $v) {
+    fputcsv($fh, [$k, $v]);
+}
+fclose($fh);
